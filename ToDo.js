@@ -16,11 +16,9 @@ export default class ToDo extends Component {
     isCompleted: false,
     toDoValue: ""
   };
-
   render() {
     const { isCompleted, isEditing, toDoValue } = this.state;
     const { text } = this.props;
-
     return (
       <View style={styles.container}>
         <View style={styles.column}>
@@ -28,16 +26,20 @@ export default class ToDo extends Component {
             <View
               style={[
                 styles.circle,
-                isCompleted ? styles.completedCircle : styles.unCompletedCircle
+                isCompleted ? styles.completedCircle : styles.uncompletedCircle
               ]}
             />
           </TouchableOpacity>
           {isEditing ? (
             <TextInput
-              style={[styles.input, styles.text]}
+              style={[
+                styles.text,
+                styles.input,
+                isCompleted ? styles.completedText : styles.uncompletedText
+              ]}
               value={toDoValue}
               multiline={true}
-              onChangeText={this._controlInput}
+              onChangeText={this._controllInput}
               returnKeyType={"done"}
               onBlur={this._finishEditing}
             />
@@ -45,7 +47,7 @@ export default class ToDo extends Component {
             <Text
               style={[
                 styles.text,
-                isCompleted ? styles.completedText : styles.unCompletedText
+                isCompleted ? styles.completedText : styles.uncompletedText
               ]}
             >
               {text}
@@ -78,30 +80,23 @@ export default class ToDo extends Component {
       </View>
     );
   }
-
   _toggleComplete = () => {
-    return this.setState(prevState => {
+    this.setState(prevState => {
       return {
         isCompleted: !prevState.isCompleted
       };
     });
   };
-
   _startEditing = () => {
     const { text } = this.props;
-    return this.setState({
-      isEditing: true,
-      toDoValue: text
-    });
+    this.setState({ isEditing: true, toDoValue: text });
   };
-
   _finishEditing = () => {
-    return this.setState({
+    this.setState({
       isEditing: false
     });
   };
-
-  _controlInput = text => {
+  _controllInput = text => {
     this.setState({ toDoValue: text });
   };
 }
@@ -119,17 +114,15 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    //borderRadius는 항상 width와 height의 절반이어야 한다.
     borderWidth: 3,
     marginRight: 20
   },
   completedCircle: {
     borderColor: "#bbb"
   },
-  unCompletedCircle: {
-    borderColor: "#f23657"
+  uncompletedCircle: {
+    borderColor: "#F23657"
   },
-
   text: {
     fontWeight: "600",
     fontSize: 20,
@@ -139,14 +132,14 @@ const styles = StyleSheet.create({
     color: "#bbb",
     textDecorationLine: "line-through"
   },
-  unCompletedText: {
-    color: "#353535"
+  uncompletedText: {
+    color: "#353839"
   },
   column: {
     flexDirection: "row",
     alignItems: "center",
-    width: width / 2,
-    justifyContent: "space-between"
+    width: width / 2
+    // justifyContent: "space-between"
   },
   actions: {
     flexDirection: "row"
@@ -156,7 +149,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   input: {
-    marginVertical: 115,
-    width: width / 2
+    marginVertical: 15,
+    width: width / 2,
+    paddingBottom: 5
   }
 });
