@@ -72,7 +72,7 @@ export default class ToDo extends Component {
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.actionContainer}>
-                <Text style={styles.actionText}>❌</Text>
+                <Text>❌</Text>
               </View>
             </TouchableOpacity>
           </View>

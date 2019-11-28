@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { AppLoading } from "expo";
 import ToDo from "./ToDo";
+import uuidv1 from "uuid/v1";
 
 const { height, width } = Dimensions.get("window");
 
@@ -41,6 +42,7 @@ export default class App extends React.Component {
             placeholderTextColor={"#999"}
             returnKeyType={"done"}
             autoCorrect={false}
+            onSubmitEditing={this._addToDo}
           ></TextInput>
           <ScrollView contentContainerStyle={styles.toDos}>
             <ToDo text={"Hello I am To Do"} />
@@ -55,7 +57,41 @@ export default class App extends React.Component {
   };
   //이벤트에서 text를 가져오므로 ()안에 text라 씀
 
-  _loadToDos = () => {};
+  _loadToDos = () => {
+    this.setState({
+      loadedToDos: true
+    });
+  };
+
+  _addToDo = () => {
+    const { newToDo } = this.state;
+    if (newToDo !== "") {
+      this.setState(prevState => {
+        const ID = uuidv1();
+        const newToDoOject = {
+          [ID]: {
+            id: ID,
+            isCompleted: false,
+            text: newToDo,
+            createdAt: Date.now()
+          }
+        };
+        const newState = {
+          ...prevState,
+          //위는 내가 전에 가지던 모든 prevState들을 추가
+          newToDo: "",
+          toDos: {
+            ...prevState.toDos,
+            //내가 가지던 모든 toDos들
+            ...newToDoOject
+            //새로운 todo오브젝트를 추가
+            //...newToDo~는 newToDoObject : id : {text: 'new todo'}를 줄인거다(하나에 대하서만 적용)
+          }
+        };
+        return { ...newState };
+      });
+    }
+  };
 }
 
 const styles = StyleSheet.create({
